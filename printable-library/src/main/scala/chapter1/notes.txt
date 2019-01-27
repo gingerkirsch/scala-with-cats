@@ -1,0 +1,19 @@
+Variance is all about the ability to substitute one thing for another.
+
+Covariance means that F[B] is a subtype of F[A] if B is a subtype of A.
+This is useful for modelling collections, it allows us to substitute collections of one type with collections of another type.
+Example: we can use List[Circle] anywhere, where we can use List[Shape].
+
+Contravariance means that F[B] is a subtype of F[A] if A is a subtype of B. (reverse)
+This is useful for modelling processes.
+Example: JsonWriter[Shape] is a subtype of JsonWriter[Circle] because Circle is a subtype of Shape.
+
+Invariance means F[A] and F[B] are never subtypes of one another, no matter what is the relationship between A and B.
+This is default semantics for Scala constructors.
+
+ ----------------------------------------------------------------------------------
+|  Type class variance           |  Invariant  |  Contravariant  |  Contravariant  |
+ ----------------------------------------------------------------------------------
+|  Supertype instance used?      |      No     |       No        |       Yes       |
+|  More specific type preferred? |      No     |       Yes       |       No        |
+ ----------------------------------------------------------------------------------
