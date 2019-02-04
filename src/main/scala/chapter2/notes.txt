@@ -1,0 +1,30 @@
+A monoid for a type A is:
+- an operation combine with type (A,A) => A
+- an element empty of type A
+
+trait Monoid[A] {
+  def combine(x: A, y: A): A
+  def empty: A
+}
+
+Monoids must obey several laws: for all values x,y and z, in A,ncombine must be associative and empty must be an identity element.
+Example: addition, multiplication, string concatenation.
+
+def associativeLaw[A](x: A, y: A, z: A)(implicit m: Monoid[A]): Boolean = {
+  m.combine(x, m.combine(y,z)) == m.combine(m.combine(x,y), z)
+}
+
+def identity[A](x: A)(implicit m: Monoid[A]): Boolean = {
+  (m.combine(m.empty, x) == x) && (m.combine(x, m.empty) == x)
+}
+
+A semigroup is just combine part of monoid. There are many semigroups that are monoids, but many that are not.
+Example: addition on x > 0 or concatenation of non-empty sequences - cannot define empty element.
+
+trait Semigroup[A] {
+  def combine(x: A, y: A): A
+}
+
+Where is it used?
+Spark / Hadoop - combining the data distributed over machines is a monoid.
+CRDTs - commutative replicated data types.

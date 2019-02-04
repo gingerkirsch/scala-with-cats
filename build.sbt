@@ -1,4 +1,4 @@
-name := "printable-library"
+name := "advanced-scala-with-cats"
 
 version := "0.1"
 
