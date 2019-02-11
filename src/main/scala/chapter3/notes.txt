@@ -1,0 +1,27 @@
+Functors - an abstraction that allow us to represent sequences of operations within a context.
+Informally functor is anything with a map method. Ex.: Option, List, Either - eager; Future.
+We specify the function to apply, and map ensures it is applied to every item. The values change but the structure remain.
+
+List(1, 2, 3).map(n => n + 1)
+//res0: List[Int] = List(2, 3, 4)
+
+Future is a functor that sequences asynchronous computations by queueing them and applying them as their predecessors complete.
+Futures are not referentially transparent as it computes and caches the result (not pure). Ex.: future, created outside and within for comprehension.
+
+https://www.reddit.com/r/scala/comments/3zofjl/why_is_future_totally_unusable/
+
+It turns out that single argument functions are also functors (A => B).
+A => B. To coerce them to a correct shape fix the param type:
+Start with X => A, supply A => B and get X => B or start with MyFunc[A], supply A => B, get back MyFunc[B]
+In other words mapping over a function is a function composition.
+
+Formally, a functor is a type F[A] with an operation map with type (A => B) => F[B]
+
+cats - higherKinds
+trait Functor[F[_]]{
+  def map[A,B](fa: F[A])(f: A => B): F[B]
+}
+
+Functor laws:
+Identity: calling map with the dientity function is the same as doing nothing: fa.map(a => a) == fa
+Composition: mapping with two funcitons f and g is the same as mapping with f and then mapping with g: fa.map(g(f(_))) == fa.map(f).map(g)

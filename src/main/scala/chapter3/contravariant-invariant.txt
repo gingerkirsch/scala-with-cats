@@ -1,0 +1,46 @@
+Contravariant functor provides an operator "contramap" that represents "prepending" an operation to a chain.
+contramap only makes sense for data types that represent transformations.
+We cannot feed Option[B] backwards through a function A => B. However, we can define contramap for the Printable type.
+
+trait Printable[A] {
+  def format(value: A): String
+}
+
+Printable[A] - a transformation from A to String. Its contramap accepts a function B => A and creates new Printable[B].
+
+trait Printable[A] {
+  def format(value: A): String
+  def contramap[B](func: B => A): Printable[B] = ???
+}
+
+def format[A](value: A)(implicit p: Printable[A]): String = p.format(value)
+
+Invariant functor implement a method called "imap" that is informally equivalent to a combination of map and contramap.
+If map generates new type class instances by appending a function to a chain, and contramap generates them by prepending
+an operation to a chain, imap generates them via a pair of bidirectional transformations.
+
+trait Codec[A] {
+  def encode(value: A): String
+  def decode(value: String): A
+  def imap[B](dec: A => B, enc: B => A): Codec[B] = ???
+}
+
+def encode[A](value: A)(implicit c: Codec[A]): String = c.encode(value)
+def decode[A](value: A)(implicit c: Codec[A]): A = c.decode(value)
+
+
+Subtyping - conversion. If B is a subtype of A, we can always convert B to A.
+B is a subtype of A if there is a function A => B.
+If F is a covariant functor, and A => B then F[A] => F[B]
+If F is a contravariant functor, and B => A then F[A] => F[B]
+If F is an invariant functor, we F[A] => F[B] with A => B and F[B] => F[A] with B => A
+
+in Cats:
+
+trait Contravariant[F[_]] {
+  def contramap[A,B](fa: F[A])(f: B => A): F[B]
+}
+
+trait Invariant[F[_]]{
+  def imap[A,B](fa: F[A])(f: A => B)(g: B => A): F[B]
+}

@@ -1,0 +1,20 @@
+Kinds are like types for types. They describe the number of "holes" in a type. We distinguish between regular types that have no holes
+and the "type constructors" that have holes we can fill to produce types. Ex.: List has one hole.
+
+List        // Type constructor. Takes one parameter.
+List[A]     // Type, produced using a type parameter.
+
+math.abs    // function, takes one parameter.
+math.abs(x) // value, produced using a value parameter.
+
+In Scala we declare type constructors using underscores. Once we've declared them, however, we refer to them as simple identifiers:
+def myMethod[F[_]] = {              // declare F using underscore.
+  val functor = Functor.apply[F]    // reference F without underscore.
+}
+
+OR
+
+val f = (x: Int) => x * 2           // declare f specifying parameters.
+val f2 = f andThen f                // reference f without parameters.
+
+lift - convert A => B function into the type F[A] => F[B]
